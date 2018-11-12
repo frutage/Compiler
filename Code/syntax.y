@@ -1,29 +1,10 @@
 %{
   #include "lex.yy.c"
-  union Exp {
-    int intVal;
-    float floatVal;
-    char* str;
-  };
-  
-  /* Tree node for syntax tree */
-  typedef struct TreeNode {
-    char* name;
-    union Exp exp;
-    int line;
-    /* 1 indicates non-terminal 
-     *  0 indicates terminal
-     */
-    int type; 
-    struct TreeNode* firstChild;
-    struct TreeNode* nextSibling;
-    struct TreeNode* farther;
-  }TreeNode;
+  #include "syntree.h"
 
   TreeNode* head;
   int syntaxErrors = 0;
   void yyerror(char *msg);
-  TreeNode* createNode(char* name, int type, int line);
 %}
 
 %union {
@@ -562,17 +543,7 @@ void yyerror(char* msg) {
   fprintf(stderr, "Error type B at line %d: %s\n", yylineno, msg);
   syntaxErrors += 1;
 }
-
-TreeNode* createNode(char* name, int type, int line) {
-  struct TreeNode* h = malloc(sizeof(TreeNode));
-  h->name = name;
-  h->type = type;
-  h->line = line;
-  h->nextSibling = NULL;
-  h->firstChild = NULL;
-  return h;
-}
-
+/*
 void preOrder(struct TreeNode* root, int layer) {
   if(root && !(root->type == 1 && root->firstChild == NULL)) {
     for (int i = 0; i < layer; ++i) {
@@ -599,7 +570,7 @@ void preOrder(struct TreeNode* root, int layer) {
     }
   }
 }
-
+*/
 void printTree()
 {
   if(syntaxErrors == 0 && lexErrors == 0) 

@@ -1,12 +1,18 @@
-#include "stdio.h"
+#include <stdio.h>
 #include "syntax.tab.h"
+#include "semantic.h"
+void print_type(Type type);
+
 extern FILE* yyin;
 extern int yylineno;
 //extern int yydebug;
+extern TreeNode* head;
+extern int syntaxErrors, lexErrors;
 int yylex();
 int yyrestart(FILE* f);
 int yyparse();
 void printTree();
+void semanticParser(TreeNode* head);
 
 int  main(int argc, char** argv) {
   if (argc <= 1) 
@@ -18,9 +24,10 @@ int  main(int argc, char** argv) {
   }
   yylineno = 1;
   yyrestart(f);
-//  yydebug = 1;
+//yydebug = 1;
   yyparse();
-  printTree();
+//  printTree();
+  if (syntaxErrors == 0 && lexErrors == 0)
+    semanticParser(head);
   return 0;
 }
-
